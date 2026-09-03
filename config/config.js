@@ -108,7 +108,7 @@ const appConfig = {
         },
         
         googleMaps: {
-            enabled: true,                 // Muestra u oculta la herramienta Cómo llegar.
+            enabled: false,                 // Muestra u oculta la herramienta Cómo llegar.
             modoViaje: "driving"           // driving: auto; walking: a pie; bicycling: bicicleta; transit: transporte público.
         },
 
