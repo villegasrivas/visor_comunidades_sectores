@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Visor Cartográfico | Municipalidad de Nueva Imperial</title>
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Encabezado institucional -->
+        <header class="app-header">
+
+            <div class="brand">
+
+                <div id="brand-logo" class="brand-logo">
+                    <img
+                        id="brand-logo-image"
+                        class="brand-logo-image"
+                        alt=""
+                        hidden
+                    >
+                    <span id="brand-logo-fallback" class="brand-logo-fallback">
+                        MNI
+                    </span>
+                </div>
+
+                <div class="brand-text">
+
+                    <span id="brand-main" class="brand-main">
+                        Municipalidad de Nueva Imperial
+                    </span>
+
+                    <span id="brand-secondary" class="brand-secondary">
+                        Plataforma Cartográfica Municipal
+                    </span>
+
+                </div>
+
+            </div>
+
+<div
+    id="viewer-title"
+    class="viewer-title"
+>
+    Visor Cartográfico Base
+</div>
+
+        </header>
+
+        <!-- Área cartográfica y controles flotantes -->
+        <main id="map" class="map-container">
+
+            <div class="search-container">
+
+                <span class="search-icon">
+                    🔍
+                </span>
+
+                <input
+                    id="search-input"
+                    class="search-input"
+                    type="text"
+                    placeholder="Buscar..."
+                    aria-label="Buscar en el visor"
+                    autocomplete="off"
+                >
+
+            </div>
+
+<div
+    id="search-results"
+    class="search-results"
+></div>
+
+<!-- Panel configurable de capas -->
+<button id="open-layers-panel" class="tool-button tool-button-primary layers-toggle" type="button"
+    title="Capas y mapas base" aria-label="Capas y mapas base" aria-controls="layers-panel" aria-expanded="false">
+    <span class="tool-icon" aria-hidden="true">▱</span>
+    <span class="tool-label">Capas</span>
+</button>
+
+<aside
+    id="layers-panel"
+    class="layers-panel"
+>
+
+    <div class="layers-panel-header">
+
+        <span class="layers-panel-title">
+            Capas
+        </span>
+
+        <button
+            id="close-layers-panel"
+            class="layers-panel-close"
+            type="button"
+            aria-label="Cerrar panel de capas"
+        >
+            ×
+        </button>
+
+    </div>
+
+    <div class="layers-panel-content">
+
+        <div id="basemap-list"></div>
+        <div id="layer-groups-list"></div>
+
+    </div>
+
+</aside>
+
+<!-- Metadata general del dataset -->
+<aside id="layer-metadata-panel" class="layer-metadata-panel" aria-label="Información de la capa" hidden>
+    <div class="layer-metadata-header">
+        <div>
+            <div class="layer-metadata-kicker">Información de la capa</div>
+            <div id="layer-metadata-title" class="layer-metadata-title"></div>
+        </div>
+        <button id="close-layer-metadata" class="layer-metadata-close" type="button" aria-label="Cerrar información de la capa">×</button>
+    </div>
+    <div id="layer-metadata-content" class="layer-metadata-content"></div>
+</aside>
+
+<!-- Información extensa de la entidad seleccionada -->
+<aside id="feature-info-panel" class="feature-info-panel" aria-label="Información de la entidad" hidden>
+    <div class="feature-info-header">
+        <div>
+            <div id="feature-info-layer" class="feature-info-layer"></div>
+            <div id="feature-info-title" class="feature-info-title"></div>
+        </div>
+        <button id="close-feature-info" class="feature-info-close" type="button" aria-label="Cerrar información">×</button>
+    </div>
+    <div id="feature-info-content" class="feature-info-content"></div>
+</aside>
+
+<!-- Leyenda dinámica de capas visibles -->
+<aside id="legend-content" class="map-legend" aria-label="Leyenda" hidden>
+    <div class="map-legend-title">Leyenda</div>
+    <div id="legend-list"></div>
+</aside>
+
+            <div class="map-navigation">
+
+                <button
+                    id="zoom-in"
+					class="map-control-button"
+                    type="button"
+                    aria-label="Acercar"
+                    title="Acercar"
+                >
+                    +
+                </button>
+
+                <button
+                    id="zoom-out"
+					class="map-control-button"
+                    type="button"
+                    aria-label="Alejar"
+                    title="Alejar"
+                >
+                    −
+                </button>
+
+                <button
+                    id="home-view"
+					class="map-control-button"
+                    type="button"
+                    aria-label="Volver a extensión inicial"
+                    title="Volver a extensión inicial"
+                >
+                    ⌂
+                </button>
+
+            </div>
+
+            <div class="map-information">
+
+                <div id="map-coordinates" class="map-coordinates" aria-label="Coordenadas del mapa"></div>
+
+            </div>
+
+            <!-- Herramientas configurables -->
+            <div class="map-tools">
+
+                <button
+                    id="geolocation-button"
+                    class="tool-button"
+                    type="button"
+                    title="Mi ubicación" aria-label="Mi ubicación"
+                >
+                    <span class="tool-icon">◎</span>
+                    <span class="tool-label">Ubicación</span>
+                </button>
+
+                <button
+                    id="coordinate-search-button"
+                    class="tool-button"
+                    type="button"
+                    title="Buscar coordenadas" aria-label="Buscar coordenadas"
+                >
+                    <span class="tool-icon">⌖</span>
+                    <span class="tool-label">Coordenadas</span>
+                </button>
+
+                <button
+                    id="measurement-button"
+                    class="tool-button"
+                    type="button"
+                    title="Medir distancia o superficie" aria-label="Medir distancia o superficie"
+                >
+                    <span class="tool-icon">↔</span>
+                    <span class="tool-label">Medir</span>
+                </button>
+
+                <button id="google-maps-button" class="tool-button" type="button"
+                    title="Cómo llegar" aria-label="Cómo llegar" aria-controls="google-maps-menu" aria-expanded="false">
+                    <span class="tool-icon" aria-hidden="true">↗</span>
+                    <span class="tool-label">Cómo llegar</span>
+                </button>
+
+                <button id="downloads-button" class="tool-button" type="button"
+                    title="Descargar mapas y capas" aria-label="Descargar mapas y capas"
+                    aria-controls="downloads-panel" aria-expanded="false">
+                    <span class="tool-icon" aria-hidden="true">⇩</span>
+                    <span class="tool-label">Descargas</span>
+                </button>
+
+            </div>
+
+        </main>
+
+    </div>
+
+<!-- Scripts: el orden respeta sus dependencias. -->
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+<script src="config/config.js"></script>
+
+<script src="js/map.js"></script>
+
+<script src="js/ui.js"></script>
+
+<script src="js/coordinates.js"></script>
+
+<script src="js/layers.js"></script>
+
+<script src="js/geolocation.js"></script>
+
+<script src="js/measurement.js"></script>
+
+<script src="js/coordinate-search.js"></script>
+
+<script src="js/google-maps.js"></script>
+
+<script src="js/downloads.js"></script>
+
+</body>
+
+</html>

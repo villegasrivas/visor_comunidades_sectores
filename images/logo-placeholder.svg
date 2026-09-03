@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+    <title id="title">Logo municipal provisional</title>
+    <rect width="128" height="128" rx="18" fill="#ffffff"/>
+    <circle cx="64" cy="55" r="35" fill="#17365d"/>
+    <path d="M29 82h70v10H29z" fill="#e47b25"/>
+    <text x="64" y="65" fill="#ffffff" font-family="Arial, sans-serif" font-size="27" font-weight="700" text-anchor="middle">MNI</text>
+</svg>

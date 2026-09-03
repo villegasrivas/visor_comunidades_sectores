@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prueba técnica de descargas — no es catálogo público</title>
+<link rel="stylesheet" href="../css/styles.css">
+<body>
+<main id="map" class="map-container" style="height:100vh">
+    <p>Prueba técnica de descarga. No utiliza información institucional.</p>
+    <input id="search-input" hidden>
+    <button id="open-layers-panel" hidden>Capas</button>
+    <aside id="layers-panel" hidden></aside>
+    <aside id="layer-metadata-panel" hidden></aside>
+    <div class="map-tools"><button id="downloads-button" class="tool-button" type="button">Descargas de prueba</button></div>
+</main>
+<script>
+    const appConfig = { herramientas: { descargas: { enabled: true, archivos: [
+        { titulo: "KML técnico de prueba", descripcion: "Punto ficticio en 0,0 para comprobar el guardado.", archivo: "descargas/capas/prueba.kml" },
+        { titulo: "PDF ausente (prueba de error)", archivo: "descargas/mapas/ausente.pdf" },
+        ...Array.from({ length: 8 }, (_, index) => ({ titulo: "Prueba de lista larga " + (index + 1), archivo: "descargas/capas/prueba.kml" }))
+    ] } } };
+    const L = { DomEvent: { disableClickPropagation() {}, disableScrollPropagation() {} } };
+    function closeFeatureInfoPanel() {}
+</script>
+<script src="../js/downloads.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Prueba técnica — no es información institucional</name>
+    <Placemark>
+      <name>Punto ficticio de prueba</name>
+      <Point><coordinates>0,0,0</coordinates></Point>
+    </Placemark>
+  </Document>
+</kml>
