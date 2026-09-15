@@ -1,4 +1,5 @@
 /* Inicialización y controles generales del mapa. */
+/* La vista, mapas base y orden de grupos se configuran en config.js. */
 const initialViewConfig = appConfig.mapa.vistaInicial;
 
 const map = L.map("map", {
@@ -9,7 +10,30 @@ const map = L.map("map", {
 
 map.setView(initialViewConfig.centro, initialViewConfig.zoom);
 
-/* Mantiene los límites estructurales por encima de las capas temáticas. */
+/* Cada grupo ocupa un nivel configurable; un número mayor se dibuja encima. */
+function getLayerGroupPaneName(groupId) {
+    return "layerGroupPane-" + String(groupId).replace(/[^a-zA-Z0-9_-]/g, "-");
+}
+
+appConfig.gruposCapas
+    .filter(function (groupConfig) { return groupConfig.enabled !== false; })
+    .forEach(function (groupConfig, index) {
+        const pane = map.createPane(getLayerGroupPaneName(groupConfig.id));
+        const configuredOrder = Number(groupConfig.ordenVisual);
+
+        pane.style.zIndex = Number.isFinite(configuredOrder) ? configuredOrder : 410 + index * 20;
+    });
+
+function getLayerPaneName(layerConfig) {
+    if (layerConfig.estructural === true) {
+        return "structuralPane";
+    }
+
+    const paneName = getLayerGroupPaneName(layerConfig.grupo);
+    return map.getPane(paneName) ? paneName : "overlayPane";
+}
+
+/* El límite estructural conserva su halo por encima de todos los grupos. */
 map.createPane("structuralHaloPane");
 map.getPane("structuralHaloPane").style.zIndex = 610;
 map.getPane("structuralHaloPane").style.pointerEvents = "none";

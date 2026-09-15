@@ -1,4 +1,5 @@
 /* Interfaz generada desde la configuración del visor. */
+/* Textos, herramientas y capas se personalizan en config.js. */
 document.getElementById("viewer-title").textContent = appConfig.aplicacion.titulo;
 document.getElementById("brand-main").textContent = appConfig.aplicacion.institucion;
 document.getElementById("brand-secondary").textContent = appConfig.aplicacion.subtitulo;
@@ -83,6 +84,7 @@ basemapList.appendChild(basemapGroup.section);
 const layerMetadataPanel = document.getElementById("layer-metadata-panel");
 const layerMetadataTitle = document.getElementById("layer-metadata-title");
 const layerMetadataContent = document.getElementById("layer-metadata-content");
+let activeMetadataLayerConfig = null;
 
 function addMetadataRow(labelText, value) {
     if (value === null || value === undefined || String(value).trim() === "") {
@@ -105,7 +107,11 @@ function addMetadataRow(labelText, value) {
 
 function openLayerMetadata(layerConfig) {
     const metadata = layerConfig.metadata || {};
+    const layerFeatures = typeof getLayerDataFeatures === "function"
+        ? getLayerDataFeatures(layerConfig)
+        : null;
 
+    activeMetadataLayerConfig = layerConfig;
     layerMetadataTitle.textContent = layerConfig.nombre;
     layerMetadataContent.innerHTML = "";
 
@@ -120,6 +126,21 @@ function openLayerMetadata(layerConfig) {
     addMetadataRow("Institución responsable", metadata.institucion);
     addMetadataRow("Actualización", metadata.fechaActualizacion);
     addMetadataRow("Escala o precisión", metadata.escala);
+
+    (metadata.camposAdicionales || []).forEach(function (fieldConfig) {
+        addMetadataRow(fieldConfig.etiqueta || "Información", fieldConfig.valor);
+    });
+
+    (metadata.estadisticas || []).forEach(function (statisticConfig) {
+        const value = layerFeatures === null
+            ? "Calculando…"
+            : calculateConfiguredStatistic(layerFeatures, statisticConfig);
+
+        addMetadataRow(
+            statisticConfig.etiqueta || statisticConfig.campo,
+            value === null ? "Sin información" : value
+        );
+    });
 
     if (metadata.enlace) {
         const link = document.createElement("a");
@@ -136,6 +157,16 @@ function openLayerMetadata(layerConfig) {
     }
 
     layerMetadataPanel.hidden = false;
+}
+
+function refreshOpenLayerMetadata(layerConfig) {
+    if (
+        activeMetadataLayerConfig &&
+        activeMetadataLayerConfig.id === layerConfig.id &&
+        !layerMetadataPanel.hidden
+    ) {
+        openLayerMetadata(layerConfig);
+    }
 }
 
 function createMetadataButton(layerConfig) {
@@ -155,7 +186,119 @@ function createMetadataButton(layerConfig) {
 
 document.getElementById("close-layer-metadata").addEventListener("click", function () {
     layerMetadataPanel.hidden = true;
+    activeMetadataLayerConfig = null;
 });
+
+function createCategoryFilter(layerConfig) {
+    const symbology = layerConfig.simbologia || {};
+    const filterConfig = symbology.filtroCategorias || {};
+    const categoryInfoConfig = layerConfig.infoCategorias || {};
+    const filteringEnabled = filterConfig.enabled === true;
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    const options = document.createElement("div");
+
+    details.id = "category-filter-" + layerConfig.id;
+    details.className = "layer-category-filter";
+    details.open = filteringEnabled
+        ? filterConfig.abiertoInicial !== false
+        : categoryInfoConfig.abiertoInicial !== false;
+    summary.textContent = filteringEnabled ? "Filtrar categorías" : "Información por categoría";
+    options.className = "layer-category-options";
+    details.appendChild(summary);
+
+    if (filteringEnabled && filterConfig.mostrarTodas !== false) {
+        const actions = document.createElement("div");
+        const showAll = document.createElement("button");
+        const hideAll = document.createElement("button");
+
+        actions.className = "layer-category-actions";
+        showAll.type = "button";
+        showAll.textContent = "Todas";
+        hideAll.type = "button";
+        hideAll.textContent = "Ninguna";
+        showAll.addEventListener("click", function () {
+            setAllLayerCategoriesVisibility(layerConfig, true);
+        });
+        hideAll.addEventListener("click", function () {
+            setAllLayerCategoriesVisibility(layerConfig, false);
+        });
+        actions.appendChild(showAll);
+        actions.appendChild(hideAll);
+        options.appendChild(actions);
+    }
+
+    (symbology.categorias || []).forEach(function (category, index) {
+        const row = document.createElement("div");
+
+        row.className = "layer-category-row";
+
+        if (filteringEnabled) {
+            const label = document.createElement("label");
+            const checkbox = document.createElement("input");
+            const text = document.createElement("span");
+
+            label.className = "layer-category-option";
+            checkbox.type = "checkbox";
+            checkbox.id = "category-" + layerConfig.id + "-" + index;
+            checkbox.checked = category.visibleInicial !== false;
+            text.textContent = category.etiqueta || String(category.valor);
+            checkbox.addEventListener("change", function () {
+                setLayerCategoryVisibility(layerConfig, category.valor, checkbox.checked);
+            });
+            label.appendChild(checkbox);
+            label.appendChild(text);
+            row.appendChild(label);
+        } else {
+            const name = document.createElement("span");
+
+            name.className = "layer-category-name";
+            name.textContent = category.etiqueta || String(category.valor);
+            row.appendChild(name);
+        }
+
+        if (categoryInfoConfig.enabled === true) {
+            const infoButton = document.createElement("button");
+            const categoryName = category.etiqueta || String(category.valor);
+
+            infoButton.className = "layer-category-info-button";
+            infoButton.type = "button";
+            infoButton.textContent = "i";
+            infoButton.title = "Información de " + categoryName;
+            infoButton.setAttribute("aria-label", "Información de " + categoryName);
+            infoButton.addEventListener("click", function () {
+                openCategoryInfoPanel(layerConfig, category);
+            });
+            row.appendChild(infoButton);
+        }
+
+        options.appendChild(row);
+    });
+
+    if (
+        symbology.mostrarNoConfigurados !== false &&
+        symbology.mostrarDefaultEnLeyenda !== false
+    ) {
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        const text = document.createElement("span");
+
+        label.className = "layer-category-option";
+        checkbox.type = "checkbox";
+        checkbox.id = "category-" + layerConfig.id + "-default";
+        checkbox.checked = symbology.visibleDefaultInicial !== false;
+        text.textContent = symbology.etiquetaDefault || "Otros valores";
+        checkbox.addEventListener("change", function () {
+            setLayerDefaultCategoryVisibility(layerConfig, checkbox.checked);
+        });
+        label.appendChild(checkbox);
+        label.appendChild(text);
+        options.appendChild(label);
+    }
+
+    details.appendChild(options);
+    return details;
+}
 
 appConfig.gruposCapas
     .filter(function (groupConfig) {
@@ -235,6 +378,21 @@ appConfig.gruposCapas
                 control.appendChild(opacityRow);
             }
 
+            if (
+                checkbox &&
+                layerConfig.simbologia &&
+                layerConfig.simbologia.tipo === "valoresUnicos" &&
+                (
+                    (
+                        layerConfig.simbologia.filtroCategorias &&
+                        layerConfig.simbologia.filtroCategorias.enabled === true
+                    ) ||
+                    (layerConfig.infoCategorias && layerConfig.infoCategorias.enabled === true)
+                )
+            ) {
+                control.appendChild(createCategoryFilter(layerConfig));
+            }
+
             if (layerConfig.minZoom != null || layerConfig.maxZoom != null) {
                 const scaleStatus = document.createElement("div");
                 const minimum = layerConfig.minZoom;
@@ -262,6 +420,22 @@ appConfig.gruposCapas
 
 const legendContent = document.getElementById("legend-content");
 const legendList = document.getElementById("legend-list");
+const legendToggle = document.getElementById("legend-toggle");
+const legendUiConfig = appConfig.herramientas.leyenda || {};
+
+function setLegendCollapsed(collapsed) {
+    legendContent.classList.toggle("map-legend-collapsed", collapsed);
+    legendToggle.title = collapsed ? "Mostrar leyenda" : "Ocultar leyenda";
+    legendToggle.setAttribute("aria-label", legendToggle.title);
+    legendToggle.setAttribute("aria-expanded", String(!collapsed));
+}
+
+legendToggle.hidden = legendUiConfig.plegable === false;
+setLegendCollapsed(legendUiConfig.colapsadaInicial === true);
+legendToggle.addEventListener("click", function (event) {
+    event.stopPropagation();
+    setLegendCollapsed(!legendContent.classList.contains("map-legend-collapsed"));
+});
 
 /* La muestra usa la geometría real y separa la opacidad del borde y del relleno. */
 function createLegendSymbol(entry, geometry) {
@@ -283,16 +457,33 @@ function createLegendSymbol(entry, geometry) {
         symbol.style.setProperty("--legend-halo-color", entry.halo.color || "#ffffff");
     } else {
         const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        const shape = document.createElementNS("http://www.w3.org/2000/svg",
-            geometry.tipo === "punto" ? "circle" : "path");
+        const pointShape = geometry.forma || "circulo";
+        const shapeTag = geometry.tipo === "punto" && pointShape === "circulo"
+            ? "circle"
+            : geometry.tipo === "punto" && pointShape === "cuadrado"
+                ? "rect"
+                : "path";
+        const shape = document.createElementNS("http://www.w3.org/2000/svg", shapeTag);
         const color = style.color || "#3388ff";
 
         svg.setAttribute("viewBox", "0 0 28 20");
         svg.classList.add("legend-vector-symbol");
         if (geometry.tipo === "punto") {
-            shape.setAttribute("cx", "14");
-            shape.setAttribute("cy", "10");
-            shape.setAttribute("r", "6");
+            if (pointShape === "circulo") {
+                shape.setAttribute("cx", "14");
+                shape.setAttribute("cy", "10");
+                shape.setAttribute("r", "6");
+            } else if (pointShape === "cuadrado") {
+                shape.setAttribute("x", "8");
+                shape.setAttribute("y", "4");
+                shape.setAttribute("width", "12");
+                shape.setAttribute("height", "12");
+                shape.setAttribute("rx", "1");
+            } else {
+                shape.setAttribute("d", pointShape === "triangulo"
+                    ? "M 14 3 L 21 16 L 7 16 Z"
+                    : "M 11 3 H 17 V 7 H 22 V 13 H 17 V 17 H 11 V 13 H 6 V 7 H 11 Z");
+            }
         } else {
             shape.setAttribute("d", geometry.tipo === "linea"
                 ? "M 3 14 L 25 6" : "M 3 4 H 25 V 16 H 3 Z");
@@ -349,9 +540,18 @@ function updateLegend() {
             return;
         }
 
-        const entries = getLegendEntries(layerConfig);
         const geometries = layerLegendSymbols[layerConfig.id] || [];
         if (geometries.length === 0) {
+            return;
+        }
+        const vectorGeometry = geometries.find(function (geometry) {
+            return geometry.tipo !== "marcador";
+        });
+        const entries = getLegendEntries(
+            layerConfig,
+            vectorGeometry ? vectorGeometry.tipo : geometries[0].tipo
+        );
+        if (entries.length === 0) {
             return;
         }
         const layerLegend = document.createElement("div");

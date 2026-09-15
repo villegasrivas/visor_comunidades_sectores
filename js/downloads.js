@@ -1,4 +1,5 @@
 /* Catálogo de PDF y KML preparados previamente; no exporta la vista actual. */
+/* Publique archivos y ajuste el catálogo en config.js; la lógica queda aquí. */
 const downloadsConfig = appConfig.herramientas.descargas;
 const downloadsButton = document.getElementById("downloads-button");
 let downloadsPanel = null;

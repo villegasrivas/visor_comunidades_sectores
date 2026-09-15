@@ -1,4 +1,5 @@
 /* Geolocalización del usuario. */
+/* Active o desactive la herramienta en config.js; esta es su lógica interna. */
 const geolocationConfig = appConfig.herramientas.geolocalizacion;
 const geolocationButton = document.getElementById("geolocation-button");
 let userLocationMarker = null;

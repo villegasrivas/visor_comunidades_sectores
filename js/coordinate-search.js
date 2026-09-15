@@ -1,4 +1,5 @@
 /* Herramienta configurable para localizar coordenadas. */
+/* Ajuste sus opciones en config.js; este archivo contiene la lógica interna. */
 const coordinateSearchConfig = appConfig.herramientas.buscarCoordenadas;
 const coordinateSearchButton = document.getElementById("coordinate-search-button");
 let coordinateSearchMenu = null;

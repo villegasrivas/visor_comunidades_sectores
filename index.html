@@ -11,7 +11,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Visor Cartográfico | Municipalidad de Nueva Imperial</title>
+    <title>Visor Cartográfico | Municipalidad de Nueva Imperial</title> <!-- Texto de respaldo; se reemplaza desde config.js. -->
 
 <link
     rel="stylesheet"
@@ -29,7 +29,7 @@
 
     <div class="app-container">
 
-        <!-- Encabezado institucional -->
+        <!-- Textos e imagen de respaldo; la identidad habitual se configura en config.js. -->
         <header class="app-header">
 
             <div class="brand">
@@ -78,6 +78,7 @@
                     🔍
                 </span>
 
+                <!-- El buscador y sus campos se configuran en config.js. -->
                 <input
                     id="search-input"
                     class="search-input"
@@ -158,10 +159,21 @@
 
 <!-- Leyenda dinámica de capas visibles -->
 <aside id="legend-content" class="map-legend" aria-label="Leyenda" hidden>
-    <div class="map-legend-title">Leyenda</div>
-    <div id="legend-list"></div>
+    <button
+        id="legend-toggle"
+        class="map-legend-toggle"
+        type="button"
+        title="Ocultar leyenda"
+        aria-label="Ocultar leyenda"
+        aria-expanded="true"
+    ></button>
+    <div class="map-legend-body">
+        <div class="map-legend-title">Leyenda</div>
+        <div id="legend-list"></div>
+    </div>
 </aside>
 
+            <!-- Símbolos visibles de navegación; cambie aquí solo si desea otros íconos. -->
             <div class="map-navigation">
 
                 <button
@@ -202,8 +214,8 @@
 
             </div>
 
-            <!-- Herramientas configurables -->
-            <div class="map-tools">
+            <!-- Íconos y textos visibles; cada herramienta se activa o desactiva en config.js. -->
+            <div id="map-tools" class="map-tools">
 
                 <button
                     id="geolocation-button"
@@ -250,6 +262,11 @@
 
             </div>
 
+            <button id="mobile-tools-toggle" class="mobile-tools-toggle" type="button" title="Herramientas"
+                aria-label="Abrir herramientas" aria-controls="map-tools" aria-expanded="false" hidden>
+                <span class="mobile-tools-glyph" aria-hidden="true">🛠</span>
+            </button>
+
         </main>
 
     </div>
@@ -280,6 +297,8 @@
 <script src="js/google-maps.js"></script>
 
 <script src="js/downloads.js"></script>
+
+<script src="js/mobile-tools.js"></script>
 
 </body>
 

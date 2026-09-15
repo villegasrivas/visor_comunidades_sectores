@@ -29,6 +29,7 @@ class Group {
 }
 
 const context = vm.createContext({
+    layerOpacityValues: {},
     document: {
         createElement: (tag) => new Element(tag),
         createElementNS: (namespace, tag) => new Element(tag)
@@ -44,6 +45,7 @@ function loadFunctions(file, start, end) {
     vm.runInContext(source.slice(first, last), context);
 }
 
+loadFunctions("layers.js", "function normalizeUniqueValue", "function updateLayerOpacity");
 loadFunctions("layers.js", "function getLayerLegendSymbols", "function isLabelVisibleAtCurrentZoom");
 loadFunctions("ui.js", "function createLegendSymbol", "function updateLegend");
 
@@ -79,7 +81,7 @@ const unique = getLegendEntries({ simbologia: {
     tipo: "valoresUnicos", estiloBase: { weight: 2 },
     categorias: [{ valor: "A", estilo: { color: "red" } }, { valor: "B", estilo: { color: "blue" } }],
     estiloDefault: { color: "gray" }
-} });
+} }, "linea");
 assert.equal(unique.length, 3);
 assert.equal(shape(unique[1].estilo, "linea").attributes.stroke, "blue");
 assert.equal(shape(unique[1].estilo, "linea").attributes["stroke-width"], "2");
@@ -87,10 +89,56 @@ const graduated = getLegendEntries({ simbologia: {
     tipo: "graduados", estiloBase: { fillOpacity: 0.6 },
     clases: [{ etiqueta: "0–10", estilo: { fillColor: "green" } }],
     mostrarDefaultEnLeyenda: false
-} });
+} }, "poligono");
 assert.equal(graduated.length, 1);
 assert.equal(shape(graduated[0].estilo, "poligono").attributes.fill, "green");
 const mixed = createLegendItem({ etiqueta: "Mixta" }, types);
 assert.equal(mixed.children[0].children.length, 4);
 assert.equal(mixed.children[1].textContent, "Mixta");
+
+const lineFromPolygonStyle = context.getFeatureStyle(
+    { geometry: { type: "LineString" }, properties: { TIPO: "A" } },
+    {
+        id: "lineas",
+        simbologia: {
+            tipo: "valoresUnicos",
+            campo: "TIPO",
+            estiloBase: { color: "white", weight: 2, fillOpacity: 0.5 },
+            categorias: [{ valor: "A", estilo: { fillColor: "red" } }]
+        }
+    }
+);
+assert.equal(lineFromPolygonStyle.color, "red");
+assert.equal(lineFromPolygonStyle.fill, false);
+assert.equal(lineFromPolygonStyle.fillColor, undefined);
+assert.equal(context.shouldRenderFeature(
+    { properties: { TIPO: "B" } },
+    { simbologia: { tipo: "valoresUnicos", campo: "TIPO", mostrarNoConfigurados: false,
+        categorias: [{ valor: "A" }] } }
+), false);
+assert.equal(context.shouldUseCirclePointSymbol(
+    { simbologia: { tipo: "graduados" } }
+), true);
+assert.equal(context.shouldUseCirclePointSymbol(
+    { simbologia: { tipo: "simple" } }
+), true);
+assert.equal(context.shouldUseCirclePointSymbol(
+    { simbologia: { tipo: "graduados", simboloPunto: "marcador" } }
+), false);
+const lineHighlight = context.getFeatureInteractionStyle(
+    { geometry: { type: "MultiLineString" } },
+    { color: "white", fillColor: "orange", weight: 6, opacity: 1, fillOpacity: 0.45 },
+    "seleccionado"
+);
+assert.equal(lineHighlight.color, "orange");
+assert.equal(lineHighlight.opacity, 1);
+assert.equal(lineHighlight.fillColor, undefined);
+const dimmedLine = context.getFeatureInteractionStyle(
+    { geometry: { type: "LineString" } },
+    { fillOpacity: 0.25 },
+    "resto"
+);
+assert.equal(dimmedLine.opacity, 0.25);
+assert.equal(context.getMarkerInteractionOpacity({ fillOpacity: 0 }, "seleccionado"), 1);
+assert.equal(context.getMarkerInteractionOpacity({ fillOpacity: 0.25 }, "resto"), 0.25);
 console.log("Leyenda: geometrías, marcadores, líneas, transparencia, halo y categorías OK.");

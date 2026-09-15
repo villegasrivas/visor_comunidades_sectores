@@ -1,18 +1,18 @@
-/* Variables visuales de la plantilla. */
+/* PERSONALIZACIÓN HABITUAL: colores generales, sombra y altura del encabezado. */
 :root {
-    --color-primary: #17365d;
-    --color-accent: #e47b25;
-    --color-background: #f4f6f8;
-    --color-surface: #ffffff;
-    --color-text: #24313f;
-    --color-text-light: #ffffff;
-    --color-text-secondary: #68727d;
-    --color-border: #d8dde3;
-    --shadow-control: 0 2px 8px rgba(0, 0, 0, 0.16);
-    --header-height: 64px;
+    --color-primary: #17365d; /* Color institucional principal. */
+    --color-accent: #e47b25; /* Color institucional de acento. */
+    --color-background: #f4f6f8; /* Fondo general fuera del mapa. */
+    --color-surface: #ffffff; /* Fondo de paneles y controles. */
+    --color-text: #24313f; /* Texto principal. */
+    --color-text-light: #ffffff; /* Texto sobre fondos oscuros. */
+    --color-text-secondary: #68727d; /* Texto complementario. */
+    --color-border: #d8dde3; /* Bordes de paneles y controles. */
+    --shadow-control: 0 2px 8px rgba(0, 0, 0, 0.16); /* Sombra de controles. */
+    --header-height: 64px; /* Altura del encabezado en escritorio. */
 }
 
-/* Reinicio básico y estructura general. */
+/* Lógica visual responsiva; normalmente no necesita modificaciones. */
 * {
     box-sizing: border-box;
 }
@@ -61,15 +61,15 @@ body {
 }
 
 .brand-logo {
-    width: 42px;
-    height: 42px;
+    width: 42px; /* Ancho visible del logo. */
+    height: 42px; /* Alto visible del logo. */
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     background-color: var(--color-surface);
     color: var(--color-primary);
-    border-radius: 6px;
+    border-radius: 6px; /* Redondeo del contenedor del logo. */
     font-size: 13px;
     font-weight: bold;
     overflow: hidden;
@@ -93,19 +93,19 @@ body {
 }
 
 .brand-main {
-    font-size: 15px;
+    font-size: 15px; /* Tamaño del nombre institucional. */
     font-weight: bold;
 }
 
 .brand-secondary {
     margin-top: 2px;
-    font-size: 11px;
-    opacity: 0.8;
+    font-size: 11px; /* Tamaño del subtítulo institucional. */
+    opacity: 0.8; /* Transparencia del subtítulo. */
 }
 
 .viewer-title {
     margin-left: auto;
-    font-size: 16px;
+    font-size: 16px; /* Tamaño del título del visor. */
     font-weight: bold;
 }
 
@@ -329,6 +329,75 @@ body {
 
 .tool-label {
     font-size: 13px;
+}
+
+/* Selector compacto de herramientas para pantallas pequeñas. */
+.mobile-tools-toggle {
+    display: none;
+}
+
+.mobile-tools-toggle {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 1100;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-primary);
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    box-shadow: var(--shadow-control);
+    cursor: pointer;
+}
+
+.mobile-tools-glyph {
+    font-size: 21px;
+    line-height: 1;
+}
+
+.mobile-tools-toggle:hover,
+.mobile-tools-toggle:focus-visible,
+.mobile-tools-toggle-active {
+    background-color: var(--color-accent);
+}
+
+.mobile-tools-toggle[hidden],
+.map-tools[hidden] {
+    display: none;
+}
+
+.map-container.mobile-tools-mode .mobile-tools-toggle {
+    display: flex;
+}
+
+.map-container.mobile-tools-mode .map-tools {
+    right: 12px;
+    bottom: 64px;
+    width: min(220px, calc(100% - 24px));
+    max-height: calc(100% - 80px);
+    padding: 7px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.96);
+    border: 1px solid var(--color-border);
+    border-radius: 9px;
+    box-shadow: var(--shadow-control);
+}
+
+.map-container.mobile-tools-mode .map-tools .tool-button {
+    width: 100%;
+    padding: 9px 11px;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.map-container.mobile-tools-mode .map-tools .tool-label {
+    display: inline;
 }
 
 /* Destino para Google Maps; no se calcula la ruta dentro del visor. */
@@ -983,17 +1052,29 @@ body {
 
 /* Información extensa de una entidad seleccionada. */
 .feature-info-panel {
-    position: absolute;
-    top: 16px;
-    right: 70px;
-    z-index: 1150;
-    width: min(360px, calc(100% - 102px));
-    max-height: calc(100% - 100px);
-    overflow: hidden;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    box-shadow: var(--shadow-control);
+    --info-panel-background: rgba(255, 255, 255, 0.96); /* Fondo y transparencia. */
+    --info-panel-border-color: var(--color-border); /* Borde exterior y separadores. */
+    --info-panel-layer-color: var(--color-text-secondary); /* Nombre de la capa. */
+    --info-panel-title-color: var(--color-primary); /* Título de entidad o categoría. */
+    --info-panel-label-color: var(--color-text-secondary); /* Nombre de cada campo. */
+    --info-panel-value-color: var(--color-text); /* Contenido de cada campo. */
+    --info-panel-close-color: var(--color-text); /* Símbolo de cierre. */
+    --info-panel-close-hover: rgba(23, 54, 93, 0.10); /* Fondo del cierre al apuntarlo. */
+    --info-panel-layer-size: 11px; /* Tamaño del nombre de capa. */
+    --info-panel-title-size: 16px; /* Tamaño del título. */
+    --info-panel-label-size: 11px; /* Tamaño del nombre de campo. */
+    --info-panel-value-size: 13px; /* Tamaño del contenido. */
+    position: absolute; /* Mantiene el panel flotando sobre el mapa. */
+    top: 16px; /* Separación desde el borde superior del mapa. */
+    right: 70px; /* Separación desde el borde derecho del mapa. */
+    z-index: 1150; /* Nivel visual sobre capas y controles inferiores. */
+    width: min(360px, calc(100% - 102px)); /* Ancho máximo sin desbordar la pantalla. */
+    max-height: calc(100% - 100px); /* Alto máximo disponible dentro del mapa. */
+    overflow: hidden; /* Conserva el contenido dentro de las esquinas. */
+    background-color: var(--info-panel-background); /* Fondo configurable del panel. */
+    border: 1px solid var(--info-panel-border-color); /* Borde configurable del panel. */
+    border-radius: 8px; /* Redondeo de las esquinas. */
+    box-shadow: var(--shadow-control); /* Sombra definida al inicio del archivo. */
 }
 
 .feature-info-panel[hidden] {
@@ -1001,47 +1082,53 @@ body {
 }
 
 .feature-info-header {
-    min-height: 58px;
-    padding: 10px 10px 10px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    border-bottom: 1px solid var(--color-border);
+    min-height: 58px; /* Altura mínima del encabezado. */
+    padding: 10px 10px 10px 14px; /* Espacio interior: arriba, derecha, abajo, izquierda. */
+    display: flex; /* Ordena título y botón de cierre en una fila. */
+    align-items: center; /* Centra verticalmente su contenido. */
+    justify-content: space-between; /* Separa título y botón de cierre. */
+    gap: 12px; /* Espacio mínimo entre título y botón. */
+    border-bottom: 1px solid var(--info-panel-border-color); /* Línea divisoria del encabezado. */
 }
 
 .feature-info-layer {
-    color: var(--color-text-secondary);
-    font-size: 11px;
+    color: var(--info-panel-layer-color); /* Color del nombre de la capa. */
+    font-size: var(--info-panel-layer-size); /* Tamaño del nombre de la capa. */
 }
 
 .feature-info-title {
-    margin-top: 2px;
-    color: var(--color-primary);
-    font-size: 16px;
-    font-weight: bold;
+    margin-top: 2px; /* Separación respecto al nombre de la capa. */
+    color: var(--info-panel-title-color); /* Color del título. */
+    font-size: var(--info-panel-title-size); /* Tamaño del título. */
+    font-weight: bold; /* Destaca el título en negrita. */
 }
 
 .feature-info-close {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-    border: none;
-    border-radius: 6px;
-    background: transparent;
-    font-size: 24px;
-    cursor: pointer;
+    width: 36px; /* Ancho del botón de cierre. */
+    height: 36px; /* Alto del botón de cierre. */
+    flex-shrink: 0; /* Evita que el botón se comprima. */
+    border: none; /* Elimina el borde predeterminado. */
+    border-radius: 6px; /* Redondeo del botón. */
+    background: transparent; /* Fondo del botón de cierre. */
+    color: var(--info-panel-close-color); /* Color del símbolo de cierre. */
+    font-size: 24px; /* Tamaño del símbolo de cierre. */
+    cursor: pointer; /* Muestra que el elemento se puede pulsar. */
+}
+
+.feature-info-close:hover,
+.feature-info-close:focus-visible {
+    background-color: var(--info-panel-close-hover);
 }
 
 .feature-info-content {
-    max-height: calc(100vh - var(--header-height) - 190px);
-    padding: 12px 14px;
-    overflow-y: auto;
+    max-height: calc(100vh - var(--header-height) - 190px); /* Alto antes del desplazamiento. */
+    padding: 12px 14px; /* Espacio interior vertical y horizontal. */
+    overflow-y: auto; /* Agrega desplazamiento si la información es extensa. */
 }
 
 .feature-info-row {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--color-border);
+    padding: 8px 0; /* Separación vertical entre campos. */
+    border-bottom: 1px solid var(--info-panel-border-color); /* Línea divisoria entre campos. */
 }
 
 .feature-info-row:last-child {
@@ -1049,17 +1136,51 @@ body {
 }
 
 .feature-info-label {
-    display: block;
-    margin-bottom: 3px;
-    color: var(--color-text-secondary);
-    font-size: 11px;
+    display: block; /* Sitúa la etiqueta sobre su valor. */
+    margin-bottom: 3px; /* Separación entre etiqueta y valor. */
+    color: var(--info-panel-label-color); /* Color del nombre del campo. */
+    font-size: var(--info-panel-label-size); /* Tamaño del nombre del campo. */
 }
 
 .feature-info-value {
-    color: var(--color-text);
-    font-size: 13px;
-    line-height: 1.4;
-    white-space: pre-wrap;
+    color: var(--info-panel-value-color); /* Color del valor mostrado. */
+    font-size: var(--info-panel-value-size); /* Tamaño del valor mostrado. */
+    line-height: 1.4; /* Separación entre líneas de un valor extenso. */
+    white-space: pre-wrap; /* Conserva saltos de línea del contenido. */
+}
+
+.category-info-description {
+    margin: 0 0 8px;
+    color: var(--info-panel-value-color);
+    font-size: var(--info-panel-value-size);
+    line-height: 1.45;
+}
+
+.category-info-values {
+    display: grid;
+    gap: 4px;
+    margin: 7px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.category-info-values li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.category-info-count {
+    flex-shrink: 0;
+    color: var(--info-panel-label-color);
+    font-size: var(--info-panel-label-size);
+}
+
+.category-info-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--info-panel-title-color);
+    font-weight: bold;
 }
 
 .layer-group {
@@ -1087,6 +1208,91 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
+}
+
+/* Filtro opcional para categorías de simbología por valores únicos. */
+.layer-category-filter {
+    margin: 2px 0 7px 26px;
+    padding-left: 9px;
+    border-left: 2px solid var(--color-border);
+    font-size: 12px;
+}
+
+.layer-category-filter summary {
+    padding: 3px 0;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.layer-category-options {
+    display: grid;
+    gap: 3px;
+    padding-top: 3px;
+}
+
+.layer-category-option {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.25;
+    cursor: pointer;
+}
+
+.layer-category-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.layer-category-name {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.25;
+}
+
+.layer-category-info-button {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    padding: 0;
+    border: 1px solid var(--color-primary);
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    font-family: Georgia, serif;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 16px;
+    cursor: pointer;
+}
+
+.layer-category-info-button:hover,
+.layer-category-info-button:focus-visible {
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+}
+
+.layer-category-option input {
+    margin: 1px 0 0;
+    accent-color: var(--color-primary);
+}
+
+.layer-category-actions {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 2px;
+}
+
+.layer-category-actions button {
+    padding: 2px 7px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-surface);
+    color: var(--color-primary);
+    font-size: 11px;
+    cursor: pointer;
 }
 
 .layer-option-static {
@@ -1173,6 +1379,17 @@ body {
 }
 
 /* Contenido de popups. */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+    background-color: rgba(255, 255, 255, 0.92); /* Fondo y transparencia del popup. */
+}
+
+.leaflet-popup-content {
+    min-width: 180px; /* Ancho mínimo del contenido. */
+    max-width: 280px; /* Ancho máximo del contenido. */
+    margin: 10px 12px; /* Espacio interior del popup. */
+}
+
 .popup-title {
     margin-bottom: 8px;
     padding-bottom: 6px;
@@ -1201,14 +1418,14 @@ body {
 
 /* Etiquetas cartográficas por capa. */
 .leaflet-tooltip.feature-label {
-    padding: 1px 4px;
-    background-color: rgba(255, 255, 255, 0.6);
+    padding: 1px 4px; /* Espacio interior de todas las etiquetas. */
+    background-color: rgba(255, 255, 255, 0.6); /* Fondo y transparencia. */
     border: none;
-    border-radius: 2px;
+    border-radius: 2px; /* Redondeo, no grosor del borde. */
     box-shadow: none;
-    color: var(--color-text);
-    font-size: 11px;
-    font-weight: 600;
+    color: var(--color-text); /* Color predeterminado del texto. */
+    font-size: 11px; /* Tamaño predeterminado del texto. */
+    font-weight: 600; /* Grosor predeterminado del texto. */
     pointer-events: none;
 }
 
@@ -1216,35 +1433,144 @@ body {
     display: none;
 }
 
+.leaflet-tooltip .feature-label-text {
+    display: inline-block;
+    transform-origin: center;
+    white-space: nowrap;
+}
+
+/* Símbolos puntuales alternativos generados desde config.js. */
+.map-vector-point-icon {
+    border: none;
+    background: transparent;
+}
+
+.map-vector-point-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
 .leaflet-tooltip.etiqueta-sector {
-    color: #3d3219;
+    color: #3d3219; /* Ejemplo vinculado desde etiquetado.claseCss. */
+}
+
+.leaflet-tooltip.etiqueta-comunidad {
+    color: var(--color-text); /* Personalice las etiquetas de comunidades. */
+}
+
+.leaflet-tooltip.etiqueta-punto {
+    padding: 2px 6px;
+    color: #ffffff;
+    background-color: rgba(23, 54, 93, 0.88);
+    border-radius: 10px;
+    font-size: 10px;
+}
+
+.leaflet-tooltip.feature-label-line {
+    padding: 0 2px;
+    overflow: visible;
+    background: transparent;
+}
+
+.leaflet-tooltip.feature-label-line .feature-label-text {
+    transform: rotate(var(--label-angle, 0deg));
+}
+
+.leaflet-tooltip.etiqueta-via {
+    color: #4b3a26;
+    background: transparent;
+    font-size: 10px;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+}
+
+.leaflet-tooltip.etiqueta-rio {
+    color: #2476ad;
+    background: transparent;
+    font-size: 11px;
+    font-style: italic;
+    text-shadow: 0 0 2px #ffffff;
+}
+
+.leaflet-tooltip.etiqueta-personalizada {
+    color: var(--color-text); /* Copie esta clase para nuevas capas. */
 }
 
 /* Leyenda dinámica. */
 .map-legend {
-    position: absolute;
-    left: 16px;
-    bottom: 96px;
-    z-index: 900;
-    width: min(150px, calc(100% - 32px));
-    max-height: 42%;
-    padding: 8px 10px;
-    overflow-y: auto;
-    background-color: rgba(255, 255, 255, 0.64);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    box-shadow: var(--shadow-control);
+    --legend-left-offset: 16px; /* Distancia usada también al esconder el panel. */
+    position: absolute; /* Mantiene la leyenda flotando sobre el mapa. */
+    left: var(--legend-left-offset); /* Separación desde el borde izquierdo. */
+    bottom: 96px; /* Separación desde el borde inferior. */
+    z-index: 900; /* Nivel visual sobre el mapa. */
+    width: min(150px, calc(100% - 32px)); /* Cambie 150px para ampliar el ancho en escritorio. */
+    padding: 0; /* El espacio interior se controla en map-legend-body. */
+    overflow: visible; /* Mantiene la pestaña visible fuera del panel. */
+    background-color: rgba(255, 255, 255, 0.64); /* Fondo blanco; 0.64 es la opacidad. */
+    border: 1px solid var(--color-border); /* Grosor, tipo y color del borde. */
+    border-radius: 8px; /* Redondeo de las esquinas. */
+    box-shadow: var(--shadow-control); /* Sombra definida al inicio del archivo. */
+    transition: transform 0.22s ease; /* Suaviza la apertura y el cierre. */
 }
 
 .map-legend[hidden] {
     display: none;
 }
 
-.map-legend-title {
-    margin-bottom: 3px;
+.map-legend-collapsed {
+    transform: translateX(calc(-100% - var(--legend-left-offset)));
+}
+
+.map-legend-body {
+    max-height: 42vh; /* Alto máximo antes de activar desplazamiento. */
+    padding: 8px 10px; /* Espacio interior vertical y horizontal. */
+    overflow-y: auto; /* Desplazamiento cuando existen muchas capas. */
+}
+
+.map-legend-toggle {
+    position: absolute;
+    top: 12px;
+    right: -18px;
+    width: 18px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid rgba(23, 54, 93, 0.20);
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+    background-color: rgba(255, 255, 255, 0.82);
+    color: rgba(23, 54, 93, 0.62);
+    box-shadow: 2px 1px 4px rgba(0, 0, 0, 0.10);
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.map-legend-toggle::before {
+    content: "‹";
+    display: block;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 25px;
+    font-weight: 300;
+    line-height: 36px;
+    transform: scaleX(0.72) scaleY(1.24);
+}
+
+.map-legend-collapsed .map-legend-toggle::before {
+    content: "›";
+}
+
+.map-legend-toggle:hover,
+.map-legend-toggle:focus-visible {
+    background-color: rgba(255, 255, 255, 0.98);
     color: var(--color-primary);
-    font-size: 14px;
-    font-weight: bold;
+    box-shadow: 2px 1px 7px rgba(23, 54, 93, 0.22);
+}
+
+.map-legend-title {
+    margin-bottom: 3px; /* Separación bajo el título Leyenda. */
+    color: var(--color-primary); /* Color del título Leyenda. */
+    font-size: 14px; /* Tamaño del título Leyenda. */
+    font-weight: bold; /* Destaca el título en negrita. */
 }
 
 .config-diagnostics {
@@ -1271,38 +1597,38 @@ body {
 }
 
 .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 2px 0;
-    font-size: 12px;
+    display: flex; /* Sitúa símbolo y texto en una fila. */
+    align-items: center; /* Alinea verticalmente símbolo y texto. */
+    gap: 6px; /* Distancia entre el símbolo y su texto. */
+    padding: 2px 0; /* Separación vertical entre categorías. */
+    font-size: 12px; /* Tamaño del texto de cada categoría. */
 }
 
 .legend-layer + .legend-layer {
-    margin-top: 5px;
+    margin-top: 5px; /* Separación entre capas de la leyenda. */
 }
 
 .legend-layer-title {
-    margin-bottom: 2px;
-    color: var(--color-primary);
-    font-size: 13px;
-    font-weight: bold;
+    margin-bottom: 2px; /* Separación bajo el nombre de la capa. */
+    color: var(--color-primary); /* Color del nombre de la capa. */
+    font-size: 13px; /* Tamaño del nombre de la capa. */
+    font-weight: bold; /* Destaca el nombre de la capa. */
 }
 
 .legend-symbols {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    flex-shrink: 0;
+    display: inline-flex; /* Mantiene juntos los trazos de un símbolo. */
+    align-items: center; /* Centra verticalmente los símbolos. */
+    gap: 3px; /* Separación cuando existe más de un símbolo. */
+    flex-shrink: 0; /* Evita que los símbolos se compriman. */
 }
 
 .legend-symbol {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 18px;
-    flex-shrink: 0;
+    display: inline-flex; /* Habilita la alineación interna. */
+    align-items: center; /* Centra verticalmente el dibujo. */
+    justify-content: center; /* Centra horizontalmente el dibujo. */
+    width: 24px; /* Ancho reservado para cada símbolo. */
+    height: 18px; /* Alto reservado para cada símbolo. */
+    flex-shrink: 0; /* Conserva el tamaño del símbolo. */
 }
 
 .legend-vector-symbol {
@@ -1311,11 +1637,11 @@ body {
 }
 
 .legend-marker-icon {
-    display: block;
-    width: auto;
-    height: 18px;
-    max-width: 24px;
-    object-fit: contain;
+    display: block; /* Evita espacios propios de imágenes en línea. */
+    width: auto; /* Mantiene la proporción horizontal del ícono. */
+    height: 18px; /* Alto visible del marcador en la leyenda. */
+    max-width: 24px; /* Ancho máximo del marcador. */
+    object-fit: contain; /* Ajusta el ícono sin deformarlo. */
 }
 
 .legend-symbol-structural {
@@ -1373,19 +1699,31 @@ body {
 /* Ajustes para teléfonos y pantallas pequeñas. */
 @media (max-width: 700px) {
     :root {
-        --header-height: 56px;
+        --header-height: 56px; /* Altura del encabezado en teléfono. */
     }
 
-    .brand-secondary {
+    .brand-text {
         display: none;
     }
 
-    .brand-main {
-        font-size: 13px;
+    .brand {
+        flex-shrink: 0;
     }
 
     .viewer-title {
-        display: none;
+        display: -webkit-box;
+        flex: 1;
+        min-width: 0;
+        margin-left: 10px;
+        overflow: hidden;
+        color: var(--color-text-light);
+        font-size: 13px;
+        line-height: 1.15;
+        max-height: 2.3em;
+        text-align: left;
+        overflow-wrap: anywhere;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
     }
 
     .search-container {
@@ -1437,17 +1775,20 @@ body {
     }
 
     .feature-info-panel {
-        top: 116px;
-        right: 12px;
-        width: calc(100% - 24px);
-        max-height: calc(100% - 192px);
+        top: 116px; /* Posición superior del infoPanel en teléfono. */
+        right: 12px; /* Separación derecha del infoPanel en teléfono. */
+        width: calc(100% - 24px); /* Ancho móvil dejando 12px a cada lado. */
+        max-height: calc(100% - 192px); /* Alto máximo disponible en teléfono. */
     }
 
     .map-legend {
-        left: 12px;
-        bottom: 64px;
-        width: min(210px, calc(100% - 24px));
-        max-height: 30%;
+        --legend-left-offset: 12px; /* Separación y recorrido lateral en teléfono. */
+        bottom: 64px; /* Separación inferior de la leyenda en teléfono. */
+        width: min(210px, calc(100% - 24px)); /* Cambie 210px para ampliar el ancho móvil. */
+    }
+
+    .map-legend-body {
+        max-height: 30vh; /* Alto máximo de la leyenda en teléfono. */
     }
 
     .leaflet-left .leaflet-control {

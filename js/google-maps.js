@@ -1,4 +1,5 @@
 /* Selección local de destino; el enlace externo solo se abre por acción del usuario. */
+/* Ajuste el modo de viaje en config.js; este archivo contiene la lógica interna. */
 const googleMapsConfig = appConfig.herramientas.googleMaps;
 const googleMapsButton = document.getElementById("google-maps-button");
 let googleMapsMenu = null;

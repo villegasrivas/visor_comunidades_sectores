@@ -1,4 +1,5 @@
 /* Medición configurable de distancias y superficies. */
+/* Active sus modalidades en config.js; este archivo contiene la lógica interna. */
 const measurementToolConfig = appConfig.herramientas.medicion;
 const measurementToolButton = document.getElementById("measurement-button");
 let measurementMode = null;

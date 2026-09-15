@@ -1,4 +1,5 @@
 /* Conversión WGS84 y visualización de coordenadas del mapa. */
+/* Ajuste sus opciones en config.js; este archivo contiene la lógica interna. */
 const cursorCoordinatesConfig = appConfig.herramientas.coordenadasCursor;
 const coordinatesDisplay = document.getElementById("map-coordinates");
 

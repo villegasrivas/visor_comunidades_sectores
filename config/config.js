@@ -62,6 +62,14 @@ const appConfig = {
 
     /* Opciones generales de las herramientas del visor. */
     herramientas: {
+        menuHerramientasMovil: {
+            enabled: true,                 // Agrupa las herramientas en pantallas pequeñas.
+            breakpoint: 700                // Ancho máximo, en píxeles, para usar el menú móvil.
+        },
+        leyenda: {
+            plegable: true,                 // Permite esconder y volver a mostrar la leyenda.
+            colapsadaInicial: false         // true inicia la leyenda escondida.
+        },
         busqueda: {
             enabled: true,                 // Muestra u oculta el buscador.
             minimoCaracteres: 2,
