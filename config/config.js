@@ -80,7 +80,7 @@ const appConfig = {
             abrirPopup: true
         },
         geolocalizacion: {
-            enabled: false,
+            enabled: true,
             zoom: 17
         },
 
