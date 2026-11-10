@@ -668,11 +668,15 @@ function getMarkerInteractionOpacity(configuredStyle, role) {
     return 1;
 }
 
-function applyLayerOpacity(style, layerConfig) {
+function applyLayerOpacity(style, layerConfig, geometryKind) {
     const opacity = layerOpacityValues[layerConfig.id] ?? 1;
     const adjustedStyle = Object.assign({}, style || {});
 
-    adjustedStyle.opacity = (adjustedStyle.opacity ?? 1) * opacity;
+    // "fill": solo relleno de polígonos. "all": relleno y borde.
+    // En puntos y líneas, el control sigue modificando la opacidad del trazo.
+    if (layerConfig.opacityTarget !== "fill" || geometryKind !== "poligono") {
+        adjustedStyle.opacity = (adjustedStyle.opacity ?? 1) * opacity;
+    }
 
     if (adjustedStyle.fill !== false) {
         adjustedStyle.fillOpacity = (adjustedStyle.fillOpacity ?? 0.2) * opacity;
@@ -688,7 +692,7 @@ function getFeatureStyle(feature, layerConfig) {
     if (symbology.tipo === "simple") {
         return applyLayerOpacity(
             mergeStylesForGeometry(geometryKind, symbology.estilo || {}),
-            layerConfig
+            layerConfig, geometryKind
         );
     }
 
@@ -701,7 +705,7 @@ function getFeatureStyle(feature, layerConfig) {
                 symbology.estiloBase || {},
                 category ? category.estilo : symbology.estiloDefault || {}
             ),
-            layerConfig
+            layerConfig, geometryKind
         );
     }
 
@@ -732,7 +736,7 @@ function getFeatureStyle(feature, layerConfig) {
                 symbology.estiloBase || {},
                 selectedClass ? selectedClass.estilo : symbology.estiloDefault || {}
             ),
-            layerConfig
+            layerConfig, geometryKind
         );
     }
 

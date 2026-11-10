@@ -697,7 +697,29 @@ function performSearch(searchText) {
     searchResults.classList.add("search-results-visible");
 }
 
+/* Borrador SVG compartido por ambos buscadores, sin recursos externos. */
+function setSearchClearIcon(button) {
+    button.title = "Limpiar búsqueda";
+    button.setAttribute("aria-label", "Limpiar búsqueda");
+    button.classList.add("search-clear-button");
+    button.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m14 3 7 7-10 10H7l-4-4a2 2 0 0 1 0-3L14 3Z"/><path d="m8 8 8 8M11 20h10"/></svg>';
+}
+
+function clearLayerSearch() {
+    searchInput.value = "";
+    clearSearchResults();
+    // Restaura resaltado, aislamiento y contraste mediante el flujo existente.
+    if (typeof clearMapSelection === "function") clearMapSelection();
+    searchInput.focus();
+}
+
 if (searchConfig && searchConfig.enabled !== false) {
+    const clearButton = document.createElement("button");
+    clearButton.type = "button";
+    clearButton.id = "search-clear-button";
+    setSearchClearIcon(clearButton);
+    clearButton.addEventListener("click", clearLayerSearch);
+    searchInput.parentElement.appendChild(clearButton);
     searchInput.addEventListener("input", function () {
         performSearch(searchInput.value);
     });

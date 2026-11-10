@@ -1825,3 +1825,23 @@ body {
     }
 
 }
+
+/* Borrador compacto: mismo símbolo y área de acción en ambos buscadores. */
+.search-clear-button {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    margin-right: 2px;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.search-clear-button:hover { background: #edf2f5; }
+.search-clear-button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: -2px; }
+.search-clear-button svg { flex-shrink: 0; pointer-events: none; }

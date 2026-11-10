@@ -178,6 +178,7 @@ const appConfig = {
             estructural: true,                    // Siempre visible; se controla con enabled.
             interactive: false,                  // Permite interacción con las entidades.
             opacityControl: false,               // Muestra el control de transparencia.
+            opacityTarget: "fill", // "fill": solo relleno de polígonos, conserva el borde. "all": relleno y borde (valor por defecto si se omite). Puntos y líneas conservan su comportamiento.
             cluster: false,                      // Agrupa puntos cercanos.
             minZoom: null,                       // Zoom mínimo visible; null sin límite.
             maxZoom: null,                       // Zoom máximo visible; null sin límite.
@@ -265,6 +266,7 @@ const appConfig = {
             estructural: false,                   // Reserva el orden superior para límites.
             interactive: true,                   // Permite interacción con las entidades.
             opacityControl: true,                // Muestra el control de transparencia.
+            opacityTarget: "fill", // "fill": solo relleno de polígonos, conserva el borde. "all": relleno y borde (valor por defecto si se omite). Puntos y líneas conservan su comportamiento.
             cluster: false,                      // Agrupa puntos cercanos.
             minZoom: null,                       // Zoom mínimo visible; null sin límite.
             maxZoom: null,                       // Zoom máximo visible; null sin límite.
@@ -365,6 +367,7 @@ const appConfig = {
     estructural: false,                     // Use true para límites siempre visibles.
     interactive: true,                     // Permite interacción con las entidades.
     opacityControl: true,                  // Muestra el control de transparencia.
+    opacityTarget: "fill", // "fill": solo relleno de polígonos, conserva el borde. "all": relleno y borde (valor por defecto si se omite). Puntos y líneas conservan su comportamiento.
     cluster: false,                        // Agrupa puntos cercanos.
     minZoom: null,                         // Zoom mínimo visible; null sin límite.
     maxZoom: null,                         // Zoom máximo visible; null sin límite.
@@ -458,6 +461,7 @@ const appConfig = {
     estructural: false,                     // Use true para límites siempre visibles.
     interactive: true,                     // Permite interacción con las entidades.
     opacityControl: false,                   // Muestra el control de transparencia.
+    opacityTarget: "fill", // "fill": solo relleno de polígonos, conserva el borde. "all": relleno y borde (valor por defecto si se omite). Puntos y líneas conservan su comportamiento.
     cluster: true,                         // Use true solamente en capas de puntos.
     minZoom: null,                         // Zoom mínimo visible; null sin límite.
     maxZoom: null,                         // Zoom máximo visible; null sin límite.
@@ -570,6 +574,7 @@ Copie este objeto dentro de appConfig.capas y complete sus valores.
     estructural: false,                     // Use true para límites siempre visibles.
     interactive: true,                     // Permite interacción con las entidades.
     opacityControl: true,                  // Muestra el control de transparencia.
+    opacityTarget: "fill", // "fill": solo relleno de polígonos, conserva el borde. "all": relleno y borde (valor por defecto si se omite). Puntos y líneas conservan su comportamiento.
     cluster: false,                        // Use true solamente en capas de puntos.
     minZoom: null,                         // Zoom mínimo visible; null sin límite.
     maxZoom: null,                         // Zoom máximo visible; null sin límite.
